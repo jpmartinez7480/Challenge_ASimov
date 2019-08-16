@@ -8,7 +8,7 @@ class Appointment extends Model{
 
 
     protected $fillable = [
-        'fullname','email','phone','rut','playlist','day','turn'
+        'fullname','email','phone','rut','playlist','day','turn','status'
     ];
 
     protected $hidden = [];

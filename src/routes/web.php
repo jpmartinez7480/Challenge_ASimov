@@ -11,6 +11,14 @@
 |
 */
 
+/*header('Access-Control-Allow-Origin:  *');
+header("Content-Type: application/json; charset=UTF-8");
+header('Access-Control-Allow-Methods:  POST, GET, OPTIONS, PUT, DELETE');
+header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
+header("Access-Control-Max-Age: 3600");
+*/
+
+
 $router->get('/', function () use ($router) {
     return $router->app->version();
 });
@@ -18,7 +26,7 @@ $router->get('/', function () use ($router) {
 $router->group(['prefix' => 'api'], function () use ($router){
     $router->get('appointments', ['uses' => 'AppointmentController@index']);
     $router->get('appointment/{id}',['uses' => 'AppointmentController@show']);
-    $router->post('appointment',['uses' => 'AppointmentController@create']);
+    $router->post('appointment',['uses'=>'AppointmentController@create']);
     $router->put('appointment/{id}',['uses' => 'AppointmentController@update']);
     $router->delete('appointment/{id}',['uses' => 'AppointmentController@delete']);
 });

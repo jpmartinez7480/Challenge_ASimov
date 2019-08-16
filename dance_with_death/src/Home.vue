@@ -1,6 +1,14 @@
 <template>
     <div>
-    <!--form -->  
+    <!--form --> 
+    <v-snackbar
+      v-model="snackbar_result"
+      top
+      :timeout=2000
+      :color="color_post_result"
+    >
+    {{ post_result }}
+    </v-snackbar> 
     <v-row justify="center">
       <h2 class = "title-steps">Follow the steps to concert a dance with Death</h2>
     </v-row>
@@ -58,7 +66,6 @@
               </v-text-field>
               <v-text-field
                 v-model="rut"
-                v-validate="'required|rut'"
                 label="Rut"
                 data-vv-name="rut"
                 solo
@@ -110,6 +117,7 @@
 
 <script>
 import Vue from 'vue'
+import axios from 'axios'
 import VeeValidate from 'vee-validate'
 import { setInterval } from 'timers';
 Vue.use(VeeValidate)
@@ -127,17 +135,20 @@ export default {
       pickerDate: null,
       day_is_selected:false,
       picker: new Date().toISOString().substr(0,10),
+      today: new Date(),
       //dateFormatted: formatDate(new Date().toISOString().substr(0, 10)),
-      //min_dd: String(new Date().getFullYear()) + '-' + String(new Date().getMonth()+1).padStart('2','0') + '-' + String(new Date().getDate()).padStart('2','0'),
-      //max_dd: String(today.getFullYear()) + String(today.getMonth()+1).padStart('2','0') + String(today.getDate()).padStart('2','0'),
-      min_dd: "2019-08-15",
-      max_dd: "2019-08-31",
+      min_dd: String(new Date().getFullYear()) + '-' + String(new Date().getMonth()+1).padStart('2','0') + '-' + String(new Date().getDate()).padStart('2','0'),
+      max_dd: String(new Date().getFullYear()) + '-' + String(new Date().getMonth()+2).padStart('2','0') + '-' + String(new Date().getDate()).padStart('2','0'),
+      //min_dd: "2019-08-15",
+      //max_dd: "2019-08-31",
       name:'',
       email: '',
       rut:'',
       playlist:'',
       phone:'',
       turn_selected:0,
+      post_result:'',
+      color_post_result:'',
       turns_day_selected:[
         {
           turn:1,
@@ -177,7 +188,6 @@ export default {
         }
       ],
       snackbar_result: false,
-      result_post: 'The appointment was succefully saved. Check your email',
       dictionary: {
         attributes: {
           email: 'E-mail Address',
@@ -215,17 +225,36 @@ export default {
         this.$refs.form.resetValidation()
       },
       submit(){
-        /*axios.post(ruta,{
-          fullname: this.fullname,
-          email: this.email,
-          rut: this.rut,
-          phone: this.phone,
-          day: this.picker,
-          turn: this.turn
+        axios({
+          method: 'POST',
+          url: 'http://localhost:8100/api/appointment',
+          data: {
+            fullname: this.name,
+            email: this.email,
+            rut: this.rut,
+            phone: this.phone,
+            day: this.picker,
+            playlist:'a',
+            status:0,
+            turn: this.turn_selected
+          }
         })
         .then((response) => {
-          
-        })*/
+          console.log(response)
+          if(response.status===201){
+            this.color_post_result="green darken-1"
+            this.post_result="The appointement was successfully scheduled!! Check your email"
+          }
+          else if(response.status===200){
+            this.color_post_result="blue darken-1"
+            this.post_result=response.data
+          }
+        })
+        .catch((error) => 
+        {
+            this.color_post_result="red darken-1"
+            this.post_result="The appointment couldn't be scheduled. Try again later"
+        })
         this.snackbar_result = true
       },
       cancel(){

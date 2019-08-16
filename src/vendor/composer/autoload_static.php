@@ -15,9 +15,10 @@ class ComposerStaticInitd0d4bf4d8069f3c7fbc141387e452f5d
         '320cde22f66dd4f5d3fd621d3e88b98f' => __DIR__ . '/..' . '/symfony/polyfill-ctype/bootstrap.php',
         '72579e7bd17821bb1321b87411366eae' => __DIR__ . '/..' . '/illuminate/support/helpers.php',
         '538ca81a9a966a6716601ecf48f4eaef' => __DIR__ . '/..' . '/opis/closure/functions.php',
-        '6124b4c8570aa390c21fafd04a26c69f' => __DIR__ . '/..' . '/myclabs/deep-copy/src/DeepCopy/deep_copy.php',
         '253c157292f75eb38082b5acb06f3f01' => __DIR__ . '/..' . '/nikic/fast-route/src/functions.php',
         'bee9632da3ca00a99623b9c35d0c4f8b' => __DIR__ . '/..' . '/laravel/lumen-framework/src/helpers.php',
+        '6124b4c8570aa390c21fafd04a26c69f' => __DIR__ . '/..' . '/myclabs/deep-copy/src/DeepCopy/deep_copy.php',
+        'd301105305ad8abbff5ffc3e97ec9a3c' => __DIR__ . '/..' . '/vluzrmos/lumen-cors/src/helpers.php',
     );
 
     public static $prefixLengthsPsr4 = array (
@@ -28,6 +29,10 @@ class ComposerStaticInitd0d4bf4d8069f3c7fbc141387e452f5d
         'W' => 
         array (
             'Webmozart\\Assert\\' => 17,
+        ),
+        'V' => 
+        array (
+            'Vluzrmos\\LumenCors\\' => 19,
         ),
         'S' => 
         array (
@@ -60,6 +65,10 @@ class ComposerStaticInitd0d4bf4d8069f3c7fbc141387e452f5d
         'O' => 
         array (
             'Opis\\Closure\\' => 13,
+        ),
+        'N' => 
+        array (
+            'Nord\\Lumen\\Cors\\' => 16,
         ),
         'M' => 
         array (
@@ -133,6 +142,10 @@ class ComposerStaticInitd0d4bf4d8069f3c7fbc141387e452f5d
         'Webmozart\\Assert\\' => 
         array (
             0 => __DIR__ . '/..' . '/webmozart/assert/src',
+        ),
+        'Vluzrmos\\LumenCors\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/vluzrmos/lumen-cors/src',
         ),
         'Symfony\\Polyfill\\Php73\\' => 
         array (
@@ -225,6 +238,10 @@ class ComposerStaticInitd0d4bf4d8069f3c7fbc141387e452f5d
         'Opis\\Closure\\' => 
         array (
             0 => __DIR__ . '/..' . '/opis/closure/src',
+        ),
+        'Nord\\Lumen\\Cors\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/nordsoftware/lumen-cors/src',
         ),
         'Monolog\\' => 
         array (
@@ -390,13 +407,16 @@ class ComposerStaticInitd0d4bf4d8069f3c7fbc141387e452f5d
     );
 
     public static $classMap = array (
+        'App\\Appointment' => __DIR__ . '/../..' . '/app/Appointment.php',
         'App\\Console\\Kernel' => __DIR__ . '/../..' . '/app/Console/Kernel.php',
         'App\\Events\\Event' => __DIR__ . '/../..' . '/app/Events/Event.php',
         'App\\Events\\ExampleEvent' => __DIR__ . '/../..' . '/app/Events/ExampleEvent.php',
         'App\\Exceptions\\Handler' => __DIR__ . '/../..' . '/app/Exceptions/Handler.php',
+        'App\\Http\\Controllers\\AppointmentController' => __DIR__ . '/../..' . '/app/Http/Controllers/AppointmentController.php',
         'App\\Http\\Controllers\\Controller' => __DIR__ . '/../..' . '/app/Http/Controllers/Controller.php',
         'App\\Http\\Controllers\\ExampleController' => __DIR__ . '/../..' . '/app/Http/Controllers/ExampleController.php',
         'App\\Http\\Middleware\\Authenticate' => __DIR__ . '/../..' . '/app/Http/Middleware/Authenticate.php',
+        'App\\Http\\Middleware\\CorsMiddleware' => __DIR__ . '/../..' . '/app/Http/Middleware/CorsMiddleware.php',
         'App\\Http\\Middleware\\ExampleMiddleware' => __DIR__ . '/../..' . '/app/Http/Middleware/ExampleMiddleware.php',
         'App\\Jobs\\ExampleJob' => __DIR__ . '/../..' . '/app/Jobs/ExampleJob.php',
         'App\\Jobs\\Job' => __DIR__ . '/../..' . '/app/Jobs/Job.php',
@@ -1905,6 +1925,10 @@ class ComposerStaticInitd0d4bf4d8069f3c7fbc141387e452f5d
         'Monolog\\ResettableInterface' => __DIR__ . '/..' . '/monolog/monolog/src/Monolog/ResettableInterface.php',
         'Monolog\\SignalHandler' => __DIR__ . '/..' . '/monolog/monolog/src/Monolog/SignalHandler.php',
         'Monolog\\Utils' => __DIR__ . '/..' . '/monolog/monolog/src/Monolog/Utils.php',
+        'Nord\\Lumen\\Cors\\Contracts\\CorsService' => __DIR__ . '/..' . '/nordsoftware/lumen-cors/src/Contracts/CorsService.php',
+        'Nord\\Lumen\\Cors\\CorsMiddleware' => __DIR__ . '/..' . '/nordsoftware/lumen-cors/src/CorsMiddleware.php',
+        'Nord\\Lumen\\Cors\\CorsService' => __DIR__ . '/..' . '/nordsoftware/lumen-cors/src/CorsService.php',
+        'Nord\\Lumen\\Cors\\CorsServiceProvider' => __DIR__ . '/..' . '/nordsoftware/lumen-cors/src/CorsServiceProvider.php',
         'Opis\\Closure\\Analyzer' => __DIR__ . '/..' . '/opis/closure/src/Analyzer.php',
         'Opis\\Closure\\ClosureContext' => __DIR__ . '/..' . '/opis/closure/src/ClosureContext.php',
         'Opis\\Closure\\ClosureScope' => __DIR__ . '/..' . '/opis/closure/src/ClosureScope.php',
@@ -3148,6 +3172,8 @@ class ComposerStaticInitd0d4bf4d8069f3c7fbc141387e452f5d
         'TheSeer\\Tokenizer\\TokenCollectionException' => __DIR__ . '/..' . '/theseer/tokenizer/src/TokenCollectionException.php',
         'TheSeer\\Tokenizer\\Tokenizer' => __DIR__ . '/..' . '/theseer/tokenizer/src/Tokenizer.php',
         'TheSeer\\Tokenizer\\XMLSerializer' => __DIR__ . '/..' . '/theseer/tokenizer/src/XMLSerializer.php',
+        'Vluzrmos\\LumenCors\\CorsMiddleware' => __DIR__ . '/..' . '/vluzrmos/lumen-cors/src/CorsMiddleware.php',
+        'Vluzrmos\\LumenCors\\CorsService' => __DIR__ . '/..' . '/vluzrmos/lumen-cors/src/CorsService.php',
         'Webmozart\\Assert\\Assert' => __DIR__ . '/..' . '/webmozart/assert/src/Assert.php',
         'phpDocumentor\\Reflection\\DocBlock' => __DIR__ . '/..' . '/phpdocumentor/reflection-docblock/src/DocBlock.php',
         'phpDocumentor\\Reflection\\DocBlockFactory' => __DIR__ . '/..' . '/phpdocumentor/reflection-docblock/src/DocBlockFactory.php',

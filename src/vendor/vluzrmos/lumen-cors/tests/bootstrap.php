@@ -1,10 +1,6 @@
 <?php
 
-require_once __DIR__.'/../vendor/autoload.php';
-
-(new Laravel\Lumen\Bootstrap\LoadEnvironmentVariables(
-    dirname(__DIR__)
-))->bootstrap();
+$dir = __DIR__.'/../vendor/laravel/lumen';
 
 /*
 |--------------------------------------------------------------------------
@@ -18,7 +14,7 @@ require_once __DIR__.'/../vendor/autoload.php';
 */
 
 $app = new Laravel\Lumen\Application(
-    dirname(__DIR__)
+    realpath($dir)
 );
 
 $app->withFacades();
@@ -58,17 +54,14 @@ $app->singleton(
 */
 
 $app->middleware([
-    'cors' => App\Http\Middleware\CorsMiddleware::class
- ]);
+    Illuminate\Cookie\Middleware\EncryptCookies::class,
+    Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
+    Illuminate\Session\Middleware\StartSession::class,
+    Illuminate\View\Middleware\ShareErrorsFromSession::class,
+    Laravel\Lumen\Http\Middleware\VerifyCsrfToken::class,
+]);
 
-
-// $app->middleware([
-//     App\Http\Middleware\ExampleMiddleware::class
-// ]);
-
-// $app->routeMiddleware([
-//     'auth' => App\Http\Middleware\Authenticate::class,
-// ]);
+$app->routeMiddleware([]);
 
 /*
 |--------------------------------------------------------------------------
@@ -81,9 +74,8 @@ $app->middleware([
 |
 */
 
-// $app->register(App\Providers\AppServiceProvider::class);
-// $app->register(App\Providers\AuthServiceProvider::class);
-// $app->register(App\Providers\EventServiceProvider::class);
+$app->register(App\Providers\AppServiceProvider::class);
+$app->register(App\Providers\EventServiceProvider::class);
 
 /*
 |--------------------------------------------------------------------------
@@ -96,10 +88,8 @@ $app->middleware([
 |
 */
 
-$app->router->group([
-    'namespace' => 'App\Http\Controllers',
-], function ($router) {
-    require __DIR__.'/../routes/web.php';
+$app->group(['namespace' => 'App\Http\Controllers'], function ($app) use ($dir) {
+    require $dir.'/app/Http/routes.php';
 });
 
 return $app;
