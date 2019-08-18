@@ -26,6 +26,8 @@ $router->get('/', function () use ($router) {
 $router->group(['prefix' => 'api'], function () use ($router){
     $router->get('appointments', ['uses' => 'AppointmentController@index']);
     $router->get('appointment/{id}',['uses' => 'AppointmentController@show']);
+    $router->get('appointment_turn/{id}',['uses' => 'AppointmentController@searchById']);
+    $router->get('turns/{day}', ['uses' => 'AppointmentController@searchTurnsAvailables']);
     $router->post('appointment',['uses'=>'AppointmentController@create']);
     $router->put('appointment/{id}',['uses' => 'AppointmentController@update']);
     $router->delete('appointment/{id}',['uses' => 'AppointmentController@delete']);

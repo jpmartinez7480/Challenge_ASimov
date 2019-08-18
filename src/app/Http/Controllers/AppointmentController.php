@@ -20,6 +20,11 @@ class AppointmentController extends Controller{
         #return response()->json(Appointment::find($id));
     }
 
+    public function searchById($id){
+        $appointment = Appointment::find($id);
+        return response()->json($appointment);
+    }
+
     public function create(Request $request){
         $rut = $request->rut;
         $day = $request->day;
@@ -30,7 +35,28 @@ class AppointmentController extends Controller{
             $person = Appointment::create($request->all());
             return response()->json($person,201);
         }
-            
+    }
+
+    public function searchTurnsAvailables($day){
+        $turns = Appointment::whereBetween('day',[$day,$day])->orderBy('turn','Asc')->get('turn');
+        $turn_desoccupied = [
+            ['value'=>'09:00 - 10:00','turn'=>1],
+            ['value'=>'10:00 - 11:00','turn'=>2],
+            ['value'=>'11:00 - 12:00','turn'=>3],
+            ['value'=>'12:00 - 13:00','turn'=>4],
+            ['value'=>'13:00 - 14:00','turn'=>5],
+            ['value'=>'14:00 - 15:00','turn'=>6],
+            ['value'=>'15:00 - 16:00','turn'=>7],
+            ['value'=>'16:00 - 17:00','turn'=>8],
+            ['value'=>'17:00 - 18:00','turn'=>9],
+        ];
+        $aux = 1;
+        foreach($turns as $t){
+            array_splice($turn_desoccupied,$t->turn-$aux,1);
+            $aux+=1;
+        }
+        return response()->json($turn_desoccupied);
+        
     }
 
     public function update($id, Request $request){

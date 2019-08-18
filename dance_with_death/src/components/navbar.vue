@@ -7,7 +7,6 @@
                 <v-toolbar-items>
                     <v-btn text><router-link :to="'/index/home'">Home</router-link></v-btn>
                 <v-btn text><router-link :to="'/index/appointments'">Appointments</router-link></v-btn>
-                <v-btn text>Rules</v-btn>
                 </v-toolbar-items>
                 </v-toolbar>
             </v-flex>

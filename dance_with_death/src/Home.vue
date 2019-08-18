@@ -25,7 +25,7 @@
                dark
                :min="min_dd"
                :max="max_dd"
-               :picker-date.sync="pickerDate"
+               :allowed-dates="allowedDates"
                landscape></v-date-picker>
             </v-col>
             <v-col cols="6" >
@@ -50,35 +50,37 @@
         <v-stepper-step :complete="e2 > 2" step="2" color = "orange darken-4">Complete Form</v-stepper-step>
         <v-stepper-content step="2">
           <v-row style = "margin-left:0px;">
-            <form>
+            <v-form 
+              ref="form"
+              v-model="valid"
+              lazy-validation>
               <v-text-field
                 v-model="name"
-                :error-messages="errors.collect('name')"
                 label="Full name"
                 data-vv-name="name"
+                :rules="[v => !!v || 'Fullname is required']"
                 required
                 solo
                 outlined
                 rounded
                 color="orange darken-4"
-                style = "height:75px"
                  >
               </v-text-field>
               <v-text-field
                 v-model="rut"
-                label="Rut"
+                label="xxxxxxxx-x"
                 data-vv-name="rut"
+                :rules="[v => !!v || 'Rut is required',v => /.+-.+/.test(v) || 'Rut must be valid']"
+                required
                 solo
                 outlined
                 rounded
                 color="orange darken-4"
-                style = "height:75px"
                 >
               </v-text-field>
               <v-text-field
                 v-model="email"
-                v-validate="'required|email'"
-                :error-messages="errors.collect('email')"
+                :rules="[v => /.+@.+\..+/.test(v) || 'E-mail must be valid']"
                 label="E-mail"
                 data-vv-name="email"
                 required
@@ -86,7 +88,6 @@
                 rounded
                 outlined
                 color="orange darken-4"
-                style = "height:75px"
                 >
               </v-text-field>
               
@@ -94,18 +95,20 @@
                 v-model="phone"
                 label="Phone"
                 data-vv-name="phone"
+                :rules="[v => !!v || 'Phone is required']"
                 solo
+                required
                 outlined
                 rounded
                 color="orange darken-4"
-                style = "height:75px"
+                
                 >
               </v-text-field>
               <div class = "btn-container">
                 <v-btn class="mr-4" @click="submit" rounded>Submit</v-btn>
                 <v-btn class="mr-2" @click="cancel" rounded>Cancel</v-btn>
               </div>
-            </form>
+            </v-form>
           </v-row>
         </v-stepper-content>
       </v-stepper>
@@ -132,15 +135,13 @@ export default {
       e2: 1,
       interval:{},
       value:0,
+      valid:true,
       pickerDate: null,
       day_is_selected:false,
       picker: new Date().toISOString().substr(0,10),
       today: new Date(),
-      //dateFormatted: formatDate(new Date().toISOString().substr(0, 10)),
       min_dd: String(new Date().getFullYear()) + '-' + String(new Date().getMonth()+1).padStart('2','0') + '-' + String(new Date().getDate()).padStart('2','0'),
-      max_dd: String(new Date().getFullYear()) + '-' + String(new Date().getMonth()+2).padStart('2','0') + '-' + String(new Date().getDate()).padStart('2','0'),
-      //min_dd: "2019-08-15",
-      //max_dd: "2019-08-31",
+      max_dd: String(new Date().getFullYear()) + '-' + String(new Date().getMonth()+(12-new Date().getMonth()+1)).padStart('2','0') + '-' + String(new Date().getDate()).padStart('2','0'),
       name:'',
       email: '',
       rut:'',
@@ -149,44 +150,7 @@ export default {
       turn_selected:0,
       post_result:'',
       color_post_result:'',
-      turns_day_selected:[
-        {
-          turn:1,
-          value:'09:00 - 10:00'
-        },
-        {
-          turn:2,
-          value:'10:00 - 11:00'
-        },
-        {
-          turn:3,
-          value:'11:00 - 12:00'
-        },
-        {
-          turn:4,
-          value:'12:00 - 13:00'
-        },
-        {
-          turn:5,
-          value:'13:00 - 14:00'
-        },
-        {
-          turn:6,
-          value:'14:00 - 15:00'
-        },
-        {
-          turn:7,
-          value:'15:00 - 16:00'
-        },
-        {
-          turn:8,
-          value:'16:00 - 17:00'
-        },
-        {
-          turn:9,
-          value:'17:00 - 18:00'
-        }
-      ],
+      turns_day_selected:[],
       snackbar_result: false,
       dictionary: {
         attributes: {
@@ -195,24 +159,53 @@ export default {
         },
         custom: {
           name: {
-            required: () => 'Name can not be empty',
-            max: 'The name field may not be greater than 10 characters',
-            // custom messages
+            required: () => 'Fullname can not be empty',
           },
+          rut: {
+            required: () => 'Rut can not be empty',
+          },
+          phone: {
+            required: () => 'Phone can not be empty', 
+          },
+
         }
       }
     }
   },
   mounted () {
       this.$validator.localize('en', this.dictionary)
-      this.interval= setInterval(() => {
-        if(this.value == 5){
-          this.day_is_selected=true
-        }
-        this.value+=1
-      },1000)
+      var date = new Date()
+      var date_aux = String(date.getFullYear()) + '-' + String(date.getMonth()+1).padStart('2','0') + '-' + String(date.getDate()).padStart('2','0')
+      this.getTurnsPerDay(date_aux)
+  },
+  watch:{
+    picker(current, prev){
+      
+      this.getTurnsPerDay(current)
+    }
   },
    methods: {
+     hello(){
+       alert("oli")
+     },
+     allowedDates: val => ![5,6].includes(new Date(val).getDay()),
+      getTurnsPerDay(day){
+        axios({
+          method: 'GET',
+          url: 'http://localhost:8100/api/turns/'+day
+        })
+        .then((response) => {
+          if(response.status === 200){
+            this.turns_day_selected = response.data
+            this.day_is_selected = true
+          }
+        })
+        .catch((error) => {
+          this.post_result = "Couldn't connect to server. Try again later"
+          this.color_post_result = "red darken-1"
+          this.snackbar_result = true
+        })
+      },
       validate () {
         if (this.$refs.form.validate()) {
           this.snackbar = true
@@ -225,7 +218,9 @@ export default {
         this.$refs.form.resetValidation()
       },
       submit(){
-        axios({
+        if(this.$refs.form.validate()){
+          
+          axios({
           method: 'POST',
           url: 'http://localhost:8100/api/appointment',
           data: {
@@ -238,41 +233,47 @@ export default {
             status:0,
             turn: this.turn_selected
           }
-        })
-        .then((response) => {
-          console.log(response)
-          if(response.status===201){
-            this.color_post_result="green darken-1"
-            this.post_result="The appointement was successfully scheduled!! Check your email"
-          }
-          else if(response.status===200){
-            this.color_post_result="blue darken-1"
-            this.post_result=response.data
-          }
-        })
-        .catch((error) => 
-        {
-            this.color_post_result="red darken-1"
-            this.post_result="The appointment couldn't be scheduled. Try again later"
-        })
-        this.snackbar_result = true
+          })
+          .then((response) => {
+            console.log(response)
+            if(response.status===201){
+              this.color_post_result="green darken-1"
+              this.post_result="The appointement was successfully scheduled!! Check your email"
+            }
+            else if(response.status===200){
+              this.color_post_result="blue darken-1"
+              this.post_result=response.data
+            }
+          })
+          .catch((error) => 
+          {
+              this.color_post_result="red darken-1"
+              this.post_result="The appointment couldn't be scheduled. Try again later"
+          })
+          this.snackbar_result = true  
+        
+        }
+        
+        
       },
       cancel(){
         this.e2 = 1
+        this.turn_selected = 0
       },
       next(){
-        this.e2 = 2
+        if(this.turn_selected === 0){
+          this.color_post_result = "red darken-1"
+          this.post_result = "You didn't choose an hour"
+          this.snackbar_result = true
+        }
+        else 
+          this.e2 = 2
         
       },
       myalert(value){
         alert(value)
       }
     },
-    watch:{
-      pickerDate(val){
-        
-      }
-    }
     
   
 };
